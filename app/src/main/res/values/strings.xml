@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Login Flow</string>
+    <string name="hello">Hey there,</string>
+    <string name="create_account">Create an Account</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="privacy_policy">You must accept out Privacy Policy to continue</string>
+    <string name="privacy_policy_header">Privacy Policy</string>
+    <string name="register">Register</string>
+    <string name="or">Or</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="text_field_first_name_error">First Name cannot be empty</string>
+    <string name="text_field_last_name_error">Last Name cannot be empty</string>
+    <string name="text_field_email_error">Example: example@example.example</string>
+    <string name="text_field_password_error">Password must be more than 6 characters</string>
+    <string name="home">Home</string>
+</resources>

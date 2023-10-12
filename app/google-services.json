@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "90555196143",
+    "project_id": "login-flow-399de",
+    "storage_bucket": "login-flow-399de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90555196143:android:534b5df9c13e5cc818711a",
+        "android_client_info": {
+          "package_name": "com.dadadadev.loginflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdPVBzK4eQhtD2l2yMp275SNa3L7CxARw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
