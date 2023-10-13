@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,7 +27,6 @@ import com.dadadadev.loginflow.components.PasswordTextFieldComponent
 import com.dadadadev.loginflow.components.SignButtonComponent
 import com.dadadadev.loginflow.presentation.sign_up.components.ClickableLoginTextComponent
 import com.dadadadev.loginflow.presentation.sign_up.components.PrivacyPolicyCheckBoxComponent
-import com.dadadadev.loginflow.presentation.sign_up.view_model.SignUpUIEvent
 import com.dadadadev.loginflow.presentation.sign_up.view_model.SignUpViewModel
 
 @Composable
@@ -37,7 +35,6 @@ fun SignUpScreen(
     navigateToPrivacyPolicyScreen: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     val viewState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
@@ -61,10 +58,7 @@ fun SignUpScreen(
             labelValue = stringResource(R.string.first_name),
             imageVector = Icons.Filled.Person,
             onValueChange = { value ->
-                viewModel.onEvent(
-                    context = context,
-                    event = SignUpUIEvent.FirstNameChanged(value)
-                )
+                viewModel.onFirstNameChanged(value)
             },
             isError = viewState.firstNameError,
             errorText = viewState.firstNameSupportText,
@@ -75,10 +69,7 @@ fun SignUpScreen(
             labelValue = stringResource(R.string.last_name),
             imageVector = Icons.Filled.Person,
             onValueChange = { value ->
-                viewModel.onEvent(
-                    context = context,
-                    event = SignUpUIEvent.LastNameChanged(value)
-                )
+                viewModel.onLastNameChanged(value)
             },
             isError = viewState.lastNameError,
             errorText = viewState.lastNameSupportText,
@@ -88,10 +79,7 @@ fun SignUpScreen(
             labelValue = stringResource(R.string.email),
             imageVector = Icons.Outlined.Email,
             onValueChange = { value ->
-                viewModel.onEvent(
-                    context = context,
-                    event = SignUpUIEvent.EmailChanged(value)
-                )
+                viewModel.onEmailChanged(value)
             },
             isError = viewState.emailError,
             errorText = viewState.emailSupportText,
@@ -100,10 +88,7 @@ fun SignUpScreen(
         PasswordTextFieldComponent(
             textValue = viewState.password,
             onValueChange = { value ->
-                viewModel.onEvent(
-                    context = context,
-                    event = SignUpUIEvent.PasswordChanged(value)
-                )
+                viewModel.onPasswordChanged(value)
             },
             isError = viewState.passwordError,
             errorText = viewState.passwordSupportText,
@@ -112,10 +97,7 @@ fun SignUpScreen(
         PrivacyPolicyCheckBoxComponent(
             onPrivacyPolicyPressed = navigateToPrivacyPolicyScreen,
             onCheckBoxPressed = { value ->
-                viewModel.onEvent(
-                    context = context,
-                    event = SignUpUIEvent.PrivacyPolicyCheckBoxPressed(value)
-                )
+                viewModel.onPrivacyPolicyCheckBoxPressed(value)
             },
             checkBoxState = viewState.privacyPolicyCheckBox,
             checkBoxError = viewState.privacyPolicyCheckBoxError
@@ -127,7 +109,7 @@ fun SignUpScreen(
         )
 
         SignButtonComponent(value = stringResource(id = R.string.register), onPressed = {
-            viewModel.onEvent(context = context, event = SignUpUIEvent.SignUpButtonPressed)
+            viewModel.userSignUp()
         }, loading = viewState.signUpLoading, errorMessage = viewState.signUpError)
 
         Spacer(modifier = Modifier.height(20.dp))

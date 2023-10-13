@@ -18,4 +18,10 @@
     <string name="text_field_email_error">Example: example@example.example</string>
     <string name="text_field_password_error">Password must be more than 6 characters</string>
     <string name="home">Home</string>
+    <string name="error">Error</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="brand">Brand</string>
+    <string name="model">Model</string>
+    <string name="device_info">Device Information</string>
+    <string name="manufacturer">Manufacturer</string>
 </resources>

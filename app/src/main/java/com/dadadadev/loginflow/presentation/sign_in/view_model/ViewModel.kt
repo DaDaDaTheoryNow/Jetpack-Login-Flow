@@ -1,8 +1,10 @@
 package com.dadadadev.loginflow.presentation.sign_in.view_model
 
-import android.content.Context
+
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dadadadev.loginflow.R
 import com.dadadadev.loginflow.core.Response
 import com.dadadadev.loginflow.core.TextFieldValidator
 import com.dadadadev.loginflow.domain.repository.AuthRepository
@@ -11,105 +13,90 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val authRepo: AuthRepository
+    private val authRepo: AuthRepository,
+    private val textFieldValidator: TextFieldValidator,
+    private val appContext: Application
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SignInUIState())
     val uiState: StateFlow<SignInUIState> = _uiState.asStateFlow()
 
-    private var ableToSignIn = false
-
-    fun onEvent(event: SignInUIEvent, context: Context) {
-        when (event) {
-            is SignInUIEvent.EmailChanged -> {
-                val validate = TextFieldValidator.validateEmail(context, event.value)
-                updateUIState {
-                    it.copy(
-                        email = event.value,
-                        emailError = validate.isError,
-                        emailSupportText = validate.supportText
-                    )
-                }
-            }
-
-            is SignInUIEvent.PasswordChanged -> {
-                val validate =
-                    TextFieldValidator.validatePassword(context, event.value)
-
-                updateUIState {
-                    it.copy(
-                        password = event.value,
-                        passwordError = validate.isError,
-                        passwordSupportText = validate.supportText
-                    )
-                }
-            }
-
-            is SignInUIEvent.SignInButtonPressed ->
-                onSignInButtonPressed(context)
-        }
-
-        checkSignInEligibility(_uiState.value)
+    private var ableToSignIn = _uiState.asStateFlow().map { currentState ->
+        !currentState.emailError && !currentState.passwordError
     }
 
-    private fun updateUIState(updateFunction: (SignInUIState) -> SignInUIState) {
-        _uiState.update { currentState -> updateFunction(currentState) }
-    }
-
-    private fun checkSignInEligibility(currentState: SignInUIState) {
-        ableToSignIn = (!currentState.emailError
-                && !currentState.passwordError)
-    }
-
-    private fun revalidateFieldsIfNeeded(currentState: SignInUIState, context: Context) {
-        if (!currentState.emailError
-            || !currentState.passwordError
-        ) {
-            onEvent(SignInUIEvent.EmailChanged(currentState.email), context)
-            onEvent(SignInUIEvent.PasswordChanged(currentState.password), context)
+    fun onEmailChanged(email: String) {
+        val validate = textFieldValidator.validateEmail(email)
+        _uiState.update {
+            it.copy(
+                email = email,
+                emailError = validate.isError,
+                emailSupportText = validate.supportText
+            )
         }
     }
 
-    private fun onSignInButtonPressed(context: Context) {
-        updateUIState { it.copy(signInError = "") }
-        revalidateFieldsIfNeeded(_uiState.value, context)
+    fun onPasswordChanged(password: String) {
+        val validate = textFieldValidator.validatePassword(password)
+        _uiState.update {
+            it.copy(
+                password = password,
+                passwordError = validate.isError,
+                passwordSupportText = validate.supportText
+            )
+        }
+    }
 
-        if (ableToSignIn) {
-            viewModelScope.launch {
-                updateUIState { it.copy(signInLoading = true) }
+    fun userSignIn() {
+        _uiState.update { it.copy(signInError = "") }
+        revalidateFieldsIfNeeded()
+
+        viewModelScope.launch {
+            val ableToSignInValue: Boolean = ableToSignIn.first()
+            if (ableToSignInValue) {
+                _uiState.update { it.copy(signInLoading = true) }
 
                 val signInResponse: SignInResponse =
                     authRepo.signIn(_uiState.value.email, _uiState.value.password)
 
-                updateUIState { it.copy(signInLoading = false) }
-
                 if (signInResponse is Response.Failure) {
-                    updateUIState {
+                    val errorString: String = appContext.getString(R.string.error)
+                    val unknownErrorString: String = appContext.getString(
+                        R.string.unknown_error
+                    )
+
+                    var signInError =
+                        "$errorString: ${signInResponse.e.message ?: unknownErrorString}"
+
+                    if (signInError.contains("INVALID_LOGIN_CREDENTIALS")) {
+                        signInError = "Error: Invalid login credentials"
+                    }
+
+                    _uiState.update {
                         it.copy(
-                            signInError = "Error: ${signInResponse.e.message}"
+                            signInError = signInError
                         )
                     }
                 }
+
+                _uiState.update { it.copy(signInLoading = false) }
             }
         }
     }
 
-    /*private suspend fun signInUserInFirebase(email: String, password: String): SignInResult {
-        return try {
-            val authResult =
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
-            val user = authResult.user
-            SignInResult(success = user != null)
-        } catch (exception: Exception) {
-            if (exception.message?.contains("INVALID_LOGIN_CREDENTIALS") == true)
-                SignInResult(success = false, errorMessage = "Error: Invalid login credentials")
-            else
-                SignInResult(success = false, errorMessage = "Error: ${exception.localizedMessage}")
+    private fun revalidateFieldsIfNeeded() {
+        val currentState = _uiState.value
+
+        if (!currentState.emailError || !currentState.passwordError) {
+            onEmailChanged(currentState.email)
+            onPasswordChanged(currentState.password)
         }
-    }*/
+    }
 }

@@ -1,39 +1,42 @@
 package com.dadadadev.loginflow.core
 
-import android.content.Context
+import android.app.Application
 import com.dadadadev.loginflow.R
+import javax.inject.Inject
 
-object TextFieldValidator {
-    fun validateFirstName(context: Context, value: String): TextFieldValidationResult {
+class TextFieldValidator @Inject constructor(
+    private val appContext: Application
+) {
+    fun validateFirstName(value: String): TextFieldValidationResult {
         return TextFieldValidationResult(
-            isError = value.isNullOrEmpty(),
-            supportText = context.getString(R.string.text_field_first_name_error)
+            isError = value.isEmpty(),
+            supportText = appContext.getString(R.string.text_field_first_name_error)
         )
     }
 
-    fun validateLastName(context: Context, value: String): TextFieldValidationResult {
+    fun validateLastName(value: String): TextFieldValidationResult {
         return TextFieldValidationResult(
-            isError = value.isNullOrEmpty(),
-            supportText = context.getString(R.string.text_field_last_name_error)
+            isError = value.isEmpty(),
+            supportText = appContext.getString(R.string.text_field_last_name_error)
         )
     }
 
-    fun validateEmail(context: Context, value: String): TextFieldValidationResult {
+    fun validateEmail(value: String): TextFieldValidationResult {
         return TextFieldValidationResult(
-            isError = value.isNullOrEmpty() || !value.contains("@") || !value.contains("."),
-            supportText = context.getString(R.string.text_field_email_error)
+            isError = value.isEmpty() || !value.contains("@") || !value.contains("."),
+            supportText = appContext.getString(R.string.text_field_email_error)
         )
     }
 
-    fun validatePassword(context: Context, value: String): TextFieldValidationResult {
+    fun validatePassword(value: String): TextFieldValidationResult {
         return TextFieldValidationResult(
-            isError = value.isNullOrEmpty() || value.length < 6,
-            supportText = context.getString(R.string.text_field_password_error)
+            isError = value.isEmpty() || value.length < 6,
+            supportText = appContext.getString(R.string.text_field_password_error)
         )
     }
-
-    data class TextFieldValidationResult(
-        val isError: Boolean = false,
-        val supportText: String = ""
-    )
 }
+
+data class TextFieldValidationResult(
+    val isError: Boolean = false,
+    val supportText: String = ""
+)

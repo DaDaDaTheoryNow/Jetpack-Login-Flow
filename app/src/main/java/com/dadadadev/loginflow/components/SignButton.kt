@@ -91,7 +91,7 @@ fun SignButtonComponent(
     Box(
         modifier = Modifier
             .animateContentSize()
-            .padding(vertical = if (errorMessage.isNotEmpty()) 10.dp else 0.dp)
+            .padding(vertical = if (errorMessage.isNotEmpty()) 5.dp else 0.dp)
             .clip(RoundedCornerShape(25))
             .background(Color.Gray)
     ) {
