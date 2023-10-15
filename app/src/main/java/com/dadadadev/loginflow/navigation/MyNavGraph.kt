@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.dadadadev.loginflow.presentation.home.HomeScreen
-import com.dadadadev.loginflow.presentation.privacy_policy.PrivacyPolicyScreen
-import com.dadadadev.loginflow.presentation.sign_in.SignInScreen
-import com.dadadadev.loginflow.presentation.sign_up.SignUpScreen
+import com.dadadadev.loginflow.presentation.screens.home.HomeScreen
+import com.dadadadev.loginflow.presentation.screens.privacy_policy.PrivacyPolicyScreen
+import com.dadadadev.loginflow.presentation.screens.sign_in.SignInScreen
+import com.dadadadev.loginflow.presentation.screens.sign_up.SignUpScreen
 
 @Composable
 fun MyNavGraph(

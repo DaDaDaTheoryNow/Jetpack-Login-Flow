@@ -1,7 +1,9 @@
 package com.dadadadev.loginflow.di
 
-import com.dadadadev.loginflow.data.repository.AuthRepositoryImpl
-import com.dadadadev.loginflow.domain.repository.AuthRepository
+import com.dadadadev.loginflow.data.repository.auth.AuthRepository
+import com.dadadadev.loginflow.data.repository.auth.AuthRepositoryInterface
+import com.dadadadev.loginflow.data.repository.device_info.DeviceInfoRepository
+import com.dadadadev.loginflow.data.repository.device_info.DeviceInfoRepositoryInterface
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -11,9 +13,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
-    @Provides
+object RepositoryModule {
     @Singleton
-    fun provideAuthRepository(): AuthRepository =
-        AuthRepositoryImpl(auth = FirebaseAuth.getInstance())
+    @Provides
+    fun bindDeviceInfoRepository(): DeviceInfoRepositoryInterface = DeviceInfoRepository()
+
+    @Singleton
+    @Provides
+    fun bindAuthRepository(): AuthRepositoryInterface = AuthRepository(
+        auth = FirebaseAuth.getInstance()
+    )
 }
