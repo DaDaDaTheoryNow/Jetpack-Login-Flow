@@ -30,24 +30,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dadadadev.loginflow.core.DataState
 
 @Composable
 fun SignButtonComponent(
+    signStatus: DataState<Boolean>?,
     value: String,
     onPressed: () -> Unit,
-    loading: Boolean,
-    errorMessage: String
 ) {
 
     val alphaAnimation = remember {
         androidx.compose.animation.core.Animatable(0f)
     }
+
     LaunchedEffect(Unit) {
         alphaAnimation.animateTo(1f, animationSpec = spring(stiffness = Spring.StiffnessLow))
     }
 
-    if (!loading) {
-
+    if (signStatus is DataState.Success || signStatus == null || signStatus is DataState.Failure) {
         Button(
             onClick = onPressed,
             modifier = Modifier
@@ -84,10 +84,12 @@ fun SignButtonComponent(
                 )
             }
         }
-    } else {
-        CircularProgressIndicator()
     }
 
+    var errorMessage = ""
+    if (signStatus is DataState.Failure) {
+        errorMessage = signStatus.exception.message ?: ""
+    }
     Box(
         modifier = Modifier
             .animateContentSize()
@@ -108,5 +110,9 @@ fun SignButtonComponent(
                 )
             )
         }
+    }
+
+    if (signStatus is DataState.Loading) {
+        CircularProgressIndicator()
     }
 }

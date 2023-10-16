@@ -21,7 +21,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dadadadev.loginflow.R
 import com.dadadadev.loginflow.presentation.screens.sign_up.components.ClickableLoginTextComponent
 import com.dadadadev.loginflow.presentation.screens.sign_up.components.PrivacyPolicyCheckBoxComponent
-import com.dadadadev.loginflow.presentation.screens.sign_up.view_model.SignUpViewModel
 import com.dadadadev.loginflow.presentation.shared_components.BasicTextFieldComponent
 import com.dadadadev.loginflow.presentation.shared_components.DividerComponent
 import com.dadadadev.loginflow.presentation.shared_components.HeadingTextComponent
@@ -35,7 +34,11 @@ fun SignUpScreen(
     navigateToPrivacyPolicyScreen: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val viewState by viewModel.uiState.collectAsStateWithLifecycle()
+    val firstNameFieldState by viewModel.firstNameFieldState.collectAsStateWithLifecycle()
+    val lastNameFieldState by viewModel.lastNameFieldState.collectAsStateWithLifecycle()
+    val emailFieldState by viewModel.emailFieldState.collectAsStateWithLifecycle()
+    val passwordFieldState by viewModel.passwordFieldState.collectAsStateWithLifecycle()
+    val privacyPolicyCheckBoxState by viewModel.privacyPolicyCheckBoxState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -54,44 +57,36 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         BasicTextFieldComponent(
-            textValue = viewState.firstName,
+            fieldState = firstNameFieldState,
             labelValue = stringResource(R.string.first_name),
             imageVector = Icons.Filled.Person,
             onValueChange = { value ->
                 viewModel.onFirstNameChanged(value)
             },
-            isError = viewState.firstNameError,
-            errorText = viewState.firstNameSupportText,
         )
 
         BasicTextFieldComponent(
-            textValue = viewState.lastName,
+            fieldState = lastNameFieldState,
             labelValue = stringResource(R.string.last_name),
             imageVector = Icons.Filled.Person,
             onValueChange = { value ->
                 viewModel.onLastNameChanged(value)
             },
-            isError = viewState.lastNameError,
-            errorText = viewState.lastNameSupportText,
         )
         BasicTextFieldComponent(
-            textValue = viewState.email,
+            fieldState = emailFieldState,
             labelValue = stringResource(R.string.email),
             imageVector = Icons.Outlined.Email,
             onValueChange = { value ->
                 viewModel.onEmailChanged(value)
             },
-            isError = viewState.emailError,
-            errorText = viewState.emailSupportText,
         )
 
         PasswordTextFieldComponent(
-            textValue = viewState.password,
+            fieldState = passwordFieldState,
             onValueChange = { value ->
                 viewModel.onPasswordChanged(value)
             },
-            isError = viewState.passwordError,
-            errorText = viewState.passwordSupportText,
         )
 
         PrivacyPolicyCheckBoxComponent(
@@ -99,8 +94,7 @@ fun SignUpScreen(
             onCheckBoxPressed = { value ->
                 viewModel.onPrivacyPolicyCheckBoxPressed(value)
             },
-            checkBoxState = viewState.privacyPolicyCheckBox,
-            checkBoxError = viewState.privacyPolicyCheckBoxError
+            checkBoxState = privacyPolicyCheckBoxState,
         )
 
         Spacer(
@@ -110,7 +104,7 @@ fun SignUpScreen(
 
         SignButtonComponent(value = stringResource(id = R.string.register), onPressed = {
             viewModel.userSignUp()
-        }, loading = viewState.signUpLoading, errorMessage = viewState.signUpError)
+        }, signStatus = viewModel.signUpStatus.value)
 
         Spacer(modifier = Modifier.height(20.dp))
 

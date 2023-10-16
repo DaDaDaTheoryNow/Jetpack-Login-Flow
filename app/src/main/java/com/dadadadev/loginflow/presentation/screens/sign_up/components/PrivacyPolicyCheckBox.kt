@@ -19,16 +19,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dadadadev.loginflow.data.model.sign.PrivacyPolicyCheckBoxState
 
 @Composable
 fun PrivacyPolicyCheckBoxComponent(
     onPrivacyPolicyPressed: () -> Unit,
     onCheckBoxPressed: (Boolean) -> Unit,
-    checkBoxState: Boolean,
-    checkBoxError: Boolean,
+    checkBoxState: PrivacyPolicyCheckBoxState,
 ) {
     Column {
-        if (checkBoxError)
+        if (checkBoxState.isError)
             Divider(
                 Modifier
                     .fillMaxWidth()
@@ -42,12 +42,12 @@ fun PrivacyPolicyCheckBoxComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = checkBoxState, onCheckedChange = onCheckBoxPressed,
+                checked = checkBoxState.value, onCheckedChange = onCheckBoxPressed,
             )
             ClickablePrivacyPolicyTextComponent(onPrivacyPolicyPressed)
         }
 
-        if (checkBoxError)
+        if (checkBoxState.isError)
             Divider(
                 Modifier
                     .fillMaxWidth()

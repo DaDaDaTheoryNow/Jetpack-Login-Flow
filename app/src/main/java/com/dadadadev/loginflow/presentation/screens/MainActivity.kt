@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dadadadev.loginflow.navigation.MyNavGraph
@@ -26,18 +27,14 @@ class MainActivity : ComponentActivity() {
             LoginflowTheme {
                 navController = rememberNavController()
                 MyNavGraph(navController = navController)
-                AuthState()
-            }
-        }
-    }
 
-    @Composable
-    private fun AuthState() {
-        val isUserSignedOut = viewModel.getAuthState().collectAsStateWithLifecycle().value
-        if (isUserSignedOut) {
-            NavigateToSignInScreen()
-        } else {
-            NavigateToHomeScreen()
+                val isUserSignedOut by viewModel.getAuthState().collectAsState()
+                if (isUserSignedOut) {
+                    NavigateToSignInScreen()
+                } else {
+                    NavigateToHomeScreen()
+                }
+            }
         }
     }
 

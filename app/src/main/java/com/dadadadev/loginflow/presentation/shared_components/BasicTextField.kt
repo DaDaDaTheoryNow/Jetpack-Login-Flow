@@ -20,16 +20,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dadadadev.loginflow.data.model.sign.FieldState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicTextFieldComponent(
+    fieldState: FieldState,
     labelValue: String,
-    textValue: String,
     imageVector: ImageVector,
     onValueChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorText: String
 ) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
@@ -50,21 +49,21 @@ fun BasicTextFieldComponent(
             focusedLabelColor = MaterialTheme.colorScheme.primary,
             cursorColor = MaterialTheme.colorScheme.primary,
         ),
-        isError = isError,
+        isError = fieldState.errorMessage.isNotEmpty(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         singleLine = true,
-        value = textValue,
+        value = fieldState.value,
         onValueChange = {
             onValueChange(it)
         },
         supportingText = {
-            if (isError && errorText.isNotEmpty()) {
+            if (fieldState.errorMessage.isNotEmpty()) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 3.dp),
                     textAlign = TextAlign.Start,
-                    text = errorText,
+                    text = fieldState.errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = TextStyle(
                         fontStyle = FontStyle.Italic,

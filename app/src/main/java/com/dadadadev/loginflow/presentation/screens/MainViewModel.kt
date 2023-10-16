@@ -14,5 +14,6 @@ class MainViewModel @Inject constructor(
         getAuthState()
     }
 
-    fun getAuthState() = authRepo.getAuthState(viewModelScope)
+    fun getAuthState() =
+        authRepo.getAuthState(viewModelScope)
 }

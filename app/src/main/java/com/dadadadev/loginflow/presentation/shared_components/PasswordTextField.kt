@@ -36,14 +36,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dadadadev.loginflow.R
+import com.dadadadev.loginflow.data.model.sign.FieldState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordTextFieldComponent(
-    textValue: String,
+    fieldState: FieldState,
     onValueChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorText: String
 ) {
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
@@ -92,17 +91,17 @@ fun PasswordTextFieldComponent(
         keyboardActions = KeyboardActions {
             localFocusManager.clearFocus()
         },
-        isError = isError,
+        isError = fieldState.errorMessage.isNotEmpty(),
         singleLine = true,
-        value = textValue,
+        value = fieldState.value,
         onValueChange = { onValueChange(it) },
         supportingText = {
-            if (isError && errorText.isNotEmpty()) {
+            if (fieldState.errorMessage.isNotEmpty()) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 3.dp),
-                    text = errorText,
+                    text = fieldState.errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = TextStyle(
                         fontStyle = FontStyle.Italic,

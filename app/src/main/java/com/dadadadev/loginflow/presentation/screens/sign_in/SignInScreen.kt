@@ -20,8 +20,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dadadadev.loginflow.R
 import com.dadadadev.loginflow.presentation.screens.sign_in.components.ClickableForgotPasswordComponent
 import com.dadadadev.loginflow.presentation.screens.sign_in.components.ClickableRegisterTextComponent
-import com.dadadadev.loginflow.presentation.screens.sign_in.view_model.SignInUIState
-import com.dadadadev.loginflow.presentation.screens.sign_in.view_model.SignInViewModel
 import com.dadadadev.loginflow.presentation.shared_components.BasicTextFieldComponent
 import com.dadadadev.loginflow.presentation.shared_components.DividerComponent
 import com.dadadadev.loginflow.presentation.shared_components.HeadingTextComponent
@@ -34,7 +32,9 @@ fun SignInScreen(
     navigateToSignUpScreen: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
-    val viewState: SignInUIState by viewModel.uiState.collectAsStateWithLifecycle()
+    val emailFieldState by viewModel.emailFieldState.collectAsStateWithLifecycle()
+    val passwordFieldState by viewModel.passwordFieldState
+        .collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -53,7 +53,7 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         BasicTextFieldComponent(
-            textValue = viewState.email,
+            fieldState = emailFieldState,
             labelValue = stringResource(R.string.email),
             imageVector = Icons.Outlined.Email,
             onValueChange = { value ->
@@ -61,19 +61,15 @@ fun SignInScreen(
                     value,
                 )
             },
-            isError = viewState.emailError,
-            errorText = viewState.emailSupportText,
         )
 
         PasswordTextFieldComponent(
-            textValue = viewState.password,
+            fieldState = passwordFieldState,
             onValueChange = { value ->
                 viewModel.onPasswordChanged(
                     value,
                 )
             },
-            isError = viewState.passwordError,
-            errorText = viewState.passwordSupportText,
         )
 
         Spacer(
@@ -92,7 +88,7 @@ fun SignInScreen(
 
         SignButtonComponent(value = stringResource(id = R.string.login), onPressed = {
             viewModel.userSignIn()
-        }, loading = viewState.signInLoading, errorMessage = viewState.signInError)
+        }, signStatus = viewModel.signInStatus.value)
 
         Spacer(modifier = Modifier.height(20.dp))
 
