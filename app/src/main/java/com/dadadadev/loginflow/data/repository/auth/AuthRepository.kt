@@ -64,5 +64,5 @@ class AuthRepository @Inject constructor(
         awaitClose {
             auth.removeAuthStateListener(authStateListener)
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser == null)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, auth.currentUser == null)
 }

@@ -2,7 +2,6 @@ package com.dadadadev.loginflow.di
 
 import android.app.Application
 import android.content.Context
-import com.dadadadev.loginflow.core.TextFieldValidator
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -23,9 +22,4 @@ class AppModule {
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
-
-    @Provides
-    @Singleton
-    fun provideTextFieldValidator(appContext: Application): TextFieldValidator =
-        TextFieldValidator(appContext)
 }
