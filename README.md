@@ -1,4 +1,4 @@
-# Jetpack-Login-Flow
+# Jetpack Login Flow
 SignIn/SignUp application
 
 > # Technologies
