@@ -1,5 +1,4 @@
 # Jetpack Login Flow
-SignIn/SignUp application
 
 > # Technologies
 > - Jetpack Compose
