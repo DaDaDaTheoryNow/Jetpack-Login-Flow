@@ -3,6 +3,7 @@ package com.dadadadev.loginflow.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +34,12 @@ fun MyNavGraph(navController: NavHostController, mainViewModel: MainViewModel = 
         composable(route = Screen.SignUpScreen.route) {
             SignUpScreen(
                 navigateToSignInScreen = {
-                    navController.popBackStack()
+                    navController.navigate(Screen.SignInScreen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                    }
                 },
                 navigateToPrivacyPolicyScreen = {
                     navController.navigate(Screen.PrivacyPolicyScreen.route)

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dadadadev.loginflow.R
-import com.dadadadev.loginflow.presentation.screens.sign_in.components.ClickableForgotPasswordComponent
 import com.dadadadev.loginflow.presentation.screens.sign_in.components.ClickableRegisterTextComponent
 import com.dadadadev.loginflow.presentation.shared_components.BasicTextFieldComponent
 import com.dadadadev.loginflow.presentation.shared_components.DividerComponent
@@ -74,15 +73,6 @@ fun SignInScreen(
 
         Spacer(
             modifier = Modifier
-                .height(10.dp)
-        )
-
-        ClickableForgotPasswordComponent(
-            value = stringResource(id = R.string.forgot_password),
-            onForgotPasswordPressed = {})
-
-        Spacer(
-            modifier = Modifier
                 .weight(0.93f)
         )
 
@@ -94,7 +84,7 @@ fun SignInScreen(
 
         DividerComponent(value = stringResource(id = R.string.or))
 
-        Spacer(modifier = Modifier.height(3.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         ClickableRegisterTextComponent(onRegisterPressed = navigateToSignUpScreen)
 

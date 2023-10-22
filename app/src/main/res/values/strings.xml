@@ -25,4 +25,5 @@
     <string name="device_info">Device Information</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="user_info">User Information</string>
+    <string name="nothing_here">Nothing here</string>
 </resources>
