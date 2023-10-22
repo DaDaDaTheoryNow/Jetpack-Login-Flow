@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dadadadev.loginflow.core.DataState
-import com.dadadadev.loginflow.data.model.DeviceInfo
+import com.dadadadev.loginflow.data.model.home.DeviceInfo
+import com.dadadadev.loginflow.data.model.home.UserInfo
 import com.dadadadev.loginflow.data.repository.auth.AuthRepositoryInterface
 import com.dadadadev.loginflow.data.repository.device_info.DeviceInfoRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,17 +22,25 @@ class HomeViewModel @Inject constructor(
     val deviceInfo: MutableState<DataState<DeviceInfo>> =
         mutableStateOf(DataState.Loading)
 
+    val userInfo: MutableState<DataState<UserInfo>> =
+        mutableStateOf(DataState.Loading)
+
     init {
         getUserDeviceInfo()
+        getUserInfo()
     }
 
     fun userSignOut() {
         authRepo.signOut()
     }
 
-    private fun getUserDeviceInfo() {
-        deviceInfoRepo.getUserDeviceInfo().onEach {
-            deviceInfo.value = it
+    private fun getUserInfo() {
+        authRepo.getUserInformation(viewModelScope).onEach {
+            userInfo.value = it
         }.launchIn(viewModelScope)
+    }
+
+    private fun getUserDeviceInfo() {
+        deviceInfo.value = deviceInfoRepo.getUserDeviceInfo()
     }
 }

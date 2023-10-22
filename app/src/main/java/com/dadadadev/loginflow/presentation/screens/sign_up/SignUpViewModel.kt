@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dadadadev.loginflow.core.DataState
 import com.dadadadev.loginflow.data.model.sign.FieldState
 import com.dadadadev.loginflow.data.model.sign.PrivacyPolicyCheckBoxState
+import com.dadadadev.loginflow.data.model.sign.UserCredentials
 import com.dadadadev.loginflow.data.repository.auth.AuthRepositoryInterface
 import com.dadadadev.loginflow.data.repository.validate_fields.ValidateFieldsInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,7 +77,15 @@ class SignUpViewModel @Inject constructor(
 
         viewModelScope.launch {
             if (ableToSignUp.first()) {
-                authRepo.signUp(emailFieldState.value.value, passwordFieldState.value.value)
+                authRepo.signUp(
+                    UserCredentials(
+                        firstNameFieldState.value.value.trim(),
+                        lastNameFieldState.value.value.trim(),
+                        emailFieldState.value.value.trim(),
+                        passwordFieldState.value.value.trim()
+                    ),
+                    viewModelScope
+                )
                     .onEach {
                         signUpStatus.value = it
                     }.launchIn(viewModelScope)

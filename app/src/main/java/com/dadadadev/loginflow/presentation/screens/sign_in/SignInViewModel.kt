@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dadadadev.loginflow.core.DataState
 import com.dadadadev.loginflow.data.model.sign.FieldState
+import com.dadadadev.loginflow.data.model.sign.UserCredentials
 import com.dadadadev.loginflow.data.repository.auth.AuthRepositoryInterface
 import com.dadadadev.loginflow.data.repository.validate_fields.ValidateFieldsInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +46,13 @@ class SignInViewModel @Inject constructor(
 
         viewModelScope.launch {
             if (ableToSignIn) {
-                authRepo.signIn(emailFieldState.value.value, passwordFieldState.value.value)
+                authRepo.signIn(
+                    UserCredentials(
+                        email = emailFieldState.value.value.trim(),
+                        password = passwordFieldState.value.value.trim()
+                    ),
+                    viewModelScope
+                )
                     .onEach {
                         signInStatus.value = it
                     }.launchIn(viewModelScope)

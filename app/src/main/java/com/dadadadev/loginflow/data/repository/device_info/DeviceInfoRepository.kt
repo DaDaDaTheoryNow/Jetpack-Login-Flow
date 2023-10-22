@@ -2,23 +2,24 @@ package com.dadadadev.loginflow.data.repository.device_info
 
 import android.os.Build
 import com.dadadadev.loginflow.core.DataState
-import com.dadadadev.loginflow.data.model.DeviceInfo
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.dadadadev.loginflow.data.model.home.DeviceInfo
+import com.dadadadev.loginflow.data.service.time.TimeServiceInterface
 import javax.inject.Inject
 
-class DeviceInfoRepository @Inject constructor() : DeviceInfoRepositoryInterface {
-    override fun getUserDeviceInfo(): Flow<DataState<DeviceInfo>> = flow {
-        emit(DataState.Loading)
-        try {
+class DeviceInfoRepository @Inject constructor(
+    private val timeService: TimeServiceInterface
+) : DeviceInfoRepositoryInterface {
+    override fun getUserDeviceInfo(): DataState<DeviceInfo> {
+        return try {
             val deviceInfo = DeviceInfo(
                 model = Build.MODEL,
                 brand = Build.BRAND,
-                manufacturer = Build.MANUFACTURER
+                manufacturer = Build.MANUFACTURER,
+                currentTime = timeService.getCurrentTime()
             )
-            emit(DataState.Success(deviceInfo))
+            DataState.Success(deviceInfo)
         } catch (e: Exception) {
-            emit(DataState.Failure(e))
+            DataState.Failure(e)
         }
     }
 }

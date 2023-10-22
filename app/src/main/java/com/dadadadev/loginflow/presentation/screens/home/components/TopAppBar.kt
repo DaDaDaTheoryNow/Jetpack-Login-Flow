@@ -2,7 +2,6 @@ package com.dadadadev.loginflow.presentation.screens.home.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,14 +34,6 @@ fun TopAppBarComponent(onSignOutButtonPressed: () -> Unit) {
                 ),
                 overflow = TextOverflow.Ellipsis
             )
-        },
-        navigationIcon = {
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = null
-                )
-            }
         },
         actions = {
             IconButton(onClick = onSignOutButtonPressed) {
